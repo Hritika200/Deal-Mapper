@@ -13,6 +13,13 @@ import {
 import L from 'leaflet';
 import { categoryColor } from './theme.js';
 
+// Map tiles. OpenStreetMap's own tiles need no API key and are fine for a light-use demo.
+// To use another provider later, set VITE_TILE_URL and VITE_TILE_ATTRIBUTION in .env.
+const TILE_URL = import.meta.env.VITE_TILE_URL || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_ATTRIBUTION =
+  import.meta.env.VITE_TILE_ATTRIBUTION ||
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
 // Shop names reach this HTML string, so escape them.
 const escapeHtml = (text) =>
   String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -93,11 +100,7 @@ export default function MapView({ shops, route, pos, walking, zoneState, doorSta
   return (
     <MapContainer center={center} zoom={17} zoomSnap={0.5} className="map" zoomControl={false} attributionControl>
       <ZoomControl position="bottomright" />
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        maxZoom={20}
-      />
+      <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} maxZoom={19} />
       <StartView start={route[0]} rightInset={rightInset} />
       <Follow pos={pos} enabled={walking} rightInset={rightInset} />
       <ClickToMove onMove={onMove} />
