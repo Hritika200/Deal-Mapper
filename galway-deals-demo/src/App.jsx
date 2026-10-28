@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapView from './MapView.jsx';
 import { getBroadcasts, getShops, resolveBeacon } from './api.js';
 import { CATEGORY } from './theme.js';
+import { AVATARS, loadAvatar, saveAvatar } from './avatars.js';
 import { catStats, decide, isMuted, learn, loadModel, reasonFor, saveModel, topPicks, unmute, emptyModel } from './agent.js';
 import { BLE, WALK_SPEED_MS, buildRoute, coarse, distanceM, nearestAlong, pointAlong, rssiAt } from './sim.js';
 
@@ -74,6 +75,7 @@ export default function App() {
   const [now, setNow] = useState(() => new Date());
   const [bubble, setBubble] = useState(null);
   const [model, setModel] = useState(loadModel);
+  const [avatar, setAvatar] = useState(loadAvatar);
   const [guideLog, setGuideLog] = useState([]);
   const [showIntro, setShowIntro] = useState(true);
   const wide = useWideScreen();
@@ -463,6 +465,11 @@ export default function App() {
     setGuideLog([]);
   };
 
+  const chooseAvatar = (a) => {
+    setAvatar(a);
+    saveAvatar(a);
+  };
+
   const toggleInterest = (id) =>
     setInterests((s) => {
       const next = new Set(s);
@@ -493,7 +500,9 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <img className="brand-avatar" src="/avatar.png" alt="" />
+          <button className="brand-avatar-btn" onClick={() => setShowIntro(true)} aria-label="Change your avatar">
+            <img className="brand-avatar" src={avatar.src} alt="" />
+          </button>
           <span className="brand-name">Passing By</span>
           <span className="brand-sub">Galway prototype</span>
         </div>
@@ -518,6 +527,7 @@ export default function App() {
               rightInset={wide ? 340 : 0}
               bubble={bubble}
               picks={picks.map((p) => p.shop.id)}
+              avatarSrc={avatar.src}
             />
           ) : (
             <div className="map map--loading">Loading Galway…</div>
@@ -578,6 +588,7 @@ export default function App() {
           </section>
 
           <Guide
+            avatarSrc={avatar.src}
             model={model}
             interests={interests}
             picks={picks}
@@ -632,6 +643,8 @@ export default function App() {
 
       {showIntro && (
         <Intro
+          avatar={avatar}
+          onChoose={chooseAvatar}
           onStart={() => {
             setShowIntro(false);
             setWalking(true);
@@ -643,7 +656,7 @@ export default function App() {
   );
 }
 
-function Intro({ onStart, onClose }) {
+function Intro({ avatar, onChoose, onStart, onClose }) {
   const startRef = useRef(null);
   useEffect(() => {
     startRef.current?.focus();
@@ -656,12 +669,29 @@ function Intro({ onStart, onClose }) {
       <div className="intro" role="dialog" aria-modal="true" aria-labelledby="intro-h">
         <img className="intro-photo" src="/quay-street.jpg" alt="Quay Street in Galway, with bunting and a busker" />
         <div className="intro-body">
-          <img className="intro-avatar" src="/avatar.png" alt="" />
+          <img className="intro-avatar" src={avatar.src} alt="" />
           <h1 id="intro-h">Wander Galway. Let the good stuff find you.</h1>
           <p>
             Walk from Eyre Square to the West End. When you pass somewhere with a deal or something on, your phone
             tells you. Get to the door and you get the details.
           </p>
+          <fieldset className="avatar-picker">
+            <legend>Choose your avatar</legend>
+            <div className="avatar-options">
+              {AVATARS.map((a) => (
+                <label key={a.id} className={`avatar-option ${avatar.id === a.id ? 'is-chosen' : ''}`}>
+                  <input
+                    type="radio"
+                    name="avatar"
+                    value={a.id}
+                    checked={avatar.id === a.id}
+                    onChange={() => onChoose(a)}
+                  />
+                  <img src={a.src} alt={a.label} />
+                </label>
+              ))}
+            </div>
+          </fieldset>
           <p className="intro-small">
             The walk and the Bluetooth signals are simulated. The businesses are real, the deals are made up.
           </p>
@@ -703,13 +733,13 @@ function Toast({ note }) {
   );
 }
 
-function Guide({ model, interests, picks, log, onUnmute, onReset }) {
+function Guide({ avatarSrc, model, interests, picks, log, onUnmute, onReset }) {
   const cats = Object.entries(CATEGORY).filter(([id]) => interests.has(id));
   const anyRated = Object.values(model.cats).some((c) => c.likes + c.dislikes > 0);
   return (
     <section className="panel guide" aria-labelledby="guide-h">
       <div className="guide-head">
-        <img src="/avatar.png" alt="" />
+        <img src={avatarSrc} alt="" />
         <div>
           <h2 id="guide-h">Your guide</h2>
           <p className="panel-note">
