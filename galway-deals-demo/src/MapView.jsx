@@ -177,7 +177,7 @@ export default function MapView({ shops, route, pos, walking, zoneState, doorSta
         }}
       >
         <Tooltip direction="right" offset={[30, 0]}>
-          That's you. Drag me anywhere.
+          That's you! Let's explore the city.
         </Tooltip>
       </Marker>
     </MapContainer>
