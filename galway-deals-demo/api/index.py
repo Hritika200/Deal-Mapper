@@ -32,7 +32,7 @@ def security_headers(resp):
 
 @app.get("/api/health")
 def health():
-    return jsonify({"ok": True, "dev_secret": USING_DEV_SECRET})
+    return jsonify({"ok": True})
 
 
 @app.get("/api/shops")
