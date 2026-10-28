@@ -9,8 +9,10 @@ export const BLE = {
   txPowerAt1m: -59, // dBm measured 1 m from the beacon
   pathLoss: 2.2, // how quickly signal fades outdoors in a street
   rangeDbm: -98, // weaker than this: phone can't hear it (~60 m)
-  doorDbm: -80, // stronger than this: you're at the door (~9 m)
-  leaveM: 25, // walk this far away and the visit resets
+  // Alert distance. Stronger than this: the phone alerts you (-88 dBm is about 20 m).
+  // To change it: -84 is about 13 m, -88 about 20 m, -92 about 30 m.
+  doorDbm: -88,
+  leaveM: 40, // walk this far away and the visit resets (keep it well above the alert distance)
   noiseDbm: 2, // random jitter, like a real radio
 };
 
