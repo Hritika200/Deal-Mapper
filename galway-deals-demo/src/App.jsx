@@ -632,7 +632,7 @@ export default function App() {
             <summary>How this prototype works</summary>
             <ul>
               <li><strong>GPS zone.</strong> When you walk within about 60 m of a shop, you get a heads-up. This is worked out on your phone, so your exact location is never sent anywhere.</li>
-              <li><strong>Bluetooth at the door.</strong> Each shop has a small beacon. When the signal gets strong (about 9 m away), you get the deal.</li>
+              <li><strong>Bluetooth at the door.</strong> Each shop has a small beacon. When the signal gets strong enough (about 20 m away), you get the deal.</li>
               <li><strong>One alert per shop.</strong> The "nearby" alert waits up to a minute of walking. If you reach the door in that time, you only get the door alert.</li>
               <li><strong>Checking beacons.</strong> Only when a beacon needs checking does the app send its ID and a rough location (rounded to about 100 m). Nothing is stored.</li>
               <li><strong>What's simulated.</strong> Browsers can't scan for Bluetooth beacons or track you in the background. A real version would be a native phone app. Here, the walk and the beacon signals are simulated.</li>
