@@ -1241,3 +1241,78 @@ code {
   text-shadow: 0 0 2px #1d3557, 0 0 1px #1d3557;
   pointer-events: none;
 }
+
+/* ---------- Avatar choice ---------- */
+
+.brand-avatar-btn {
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  line-height: 0;
+}
+
+.brand-avatar-btn:hover .brand-avatar {
+  box-shadow: 0 0 0 3px var(--mustard);
+}
+
+.avatar-picker {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.avatar-picker legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.avatar-options {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.avatar-option {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  line-height: 0;
+}
+
+.avatar-option input {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.avatar-option img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--line);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.avatar-option:hover img {
+  transform: translateY(-2px);
+}
+
+.avatar-option.is-chosen img {
+  box-shadow: 0 0 0 4px var(--pink);
+}
+
+.avatar-option input:focus-visible + img {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-option img {
+    transition: none;
+  }
+}
