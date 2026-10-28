@@ -25,12 +25,12 @@ const escapeHtml = (text) =>
   String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 // The traveller: the avatar, a Bluetooth pulse, and a speech bubble when she reaches a door.
-const walkerIcon = (walking, bubble) =>
+const walkerIcon = (walking, bubble, avatarSrc) =>
   L.divIcon({
     className: 'walker-icon',
     html: `<div class="walker${walking ? ' is-walking' : ''}">
         <span class="walker-ring"></span>
-        <img class="walker-avatar" src="/avatar.png" alt="" />
+        <img class="walker-avatar" src="${escapeHtml(avatarSrc)}" alt="" />
         ${bubble ? `<span class="walker-bubble">${escapeHtml(bubble)}</span>` : ''}
       </div>`,
     iconSize: [56, 56],
@@ -92,9 +92,9 @@ function Follow({ pos, enabled, rightInset }) {
   return null;
 }
 
-export default function MapView({ shops, route, pos, walking, zoneState, doorState, attacks, onMove, rightInset = 0, bubble, picks = [] }) {
+export default function MapView({ shops, route, pos, walking, zoneState, doorState, attacks, onMove, rightInset = 0, bubble, picks = [], avatarSrc = '/avatar.png' }) {
   const bleRangeM = 60;
-  const walker = useMemo(() => walkerIcon(walking, bubble), [walking, bubble]);
+  const walker = useMemo(() => walkerIcon(walking, bubble, avatarSrc), [walking, bubble, avatarSrc]);
   const center = useMemo(() => route[Math.floor(route.length / 2)] || [53.2718, -9.0535], [route]);
 
   return (
